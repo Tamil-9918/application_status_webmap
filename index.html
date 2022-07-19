@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Status</title>
+
+    <!-- leaflet css  -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!--<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script> -->
+    <!-- leaflet js  -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style type="text/css">
+      html, body, #map {
+        margin: 0px;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <!-- <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script> -->
+    <!-- jquery link  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="L.TileLayer.BetterWMS.js"></script>
+
+
+
+<!-- leaflet geoserver request link  -->
+    <script src="L.Geoserver.js"></script>
+
+<script>
+    // Map initialization 
+    var map = L.map('map').setView([11.489915464374487,  78.54195293755315], 7);
+   
+
+
+    /*==============================================
+                TILE LAYER and WMS
+    ================================================*/
+    //osm layer
+    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+    osm.addTo(map);
+    // map.addLayer(osm)
+
+
+
+    var url = 'https://phrgis.tn.gov.in/geoserver/wms';
+    // googleSat.addTo(map)
+
+    var wms = L.tileLayer.betterWms(url, {
+        layers: 'layers:District_Application_Status',
+        format: 'image/png',
+        style: 'dist_view',
+        transparent: true,
+        
+    }).addTo(map);
+
+    var wms1 = L.tileLayer.betterWms(url, {
+       layers: 'layers:HUD_Application_Status',
+       format: 'image/png',
+       style: 'hud_view',
+       transparent: true,
+    });
+
+
+
+
+
+
+
+
+    /*==============================================
+                    LAYER CONTROL
+    ================================================*/
+    var baseMaps = {
+        'District': wms,
+        'HUD':wms1,
+
+
+    };
+    var overlayMaps = {
+        
+       
+        
+    };
+    // map.removeLayer(singleMarker)
+
+    L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(map);
+
+        var layerLegend = L.Geoserver.legend(url, {
+            layers: 'layers:HUD_Application_Status',
+            
+            // style: `stylefile`,
+          });
+        
+          layerLegend.addTo(map);
+
+
+</script>
+
+</body>
+
+</html>
